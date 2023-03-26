@@ -10,7 +10,6 @@ docs/
 
 vis_results*
 mmtracking
-results/
 */__pycache__*
 baselines/*
 

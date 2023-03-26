@@ -149,6 +149,7 @@ class LISSTRecOP():
         return J_locs_fk, rotmat
 
 
+
     def img_project_loss(self, 
             obs: torch.Tensor, #[t,b,p,3], the last dimension=[x,y,vis]
             J_rec: torch.Tensor, #[t,b,p,3], the last dimension denotes the 3D location
@@ -178,6 +179,7 @@ class LISSTRecOP():
         # - Based on the camera extrinsics, convert J_rec to J_rec_cam, which has the joint locations in individual camera coordinate systems.
         # - Based on the camera intrinsics, convert J_rec_cam to J_rec_proj, which has the 2D joint locations in the image planes. 
         # - if encountering tensor shape misalignment, you could print these tensor shapes for debugging.
+        # - please use our file `results/test_img_project_loss_data.pkl` to test the keypoint detection. 
         # =======================================
         
         J_rec_proj = None 
@@ -185,6 +187,25 @@ class LISSTRecOP():
         loss = obs[:,:,:,-1:]*(obs[:,:,:,:-1]-J_rec_proj).abs()
         
         return torch.mean(loss)
+
+
+
+
+    def test_img_project_loss(self, cam_rotmat, cam_transl, cam_K):
+        """this function is to test the implementation of `img_project_loss`.
+        """
+        testdata = np.load('results/test_img_project_loss_data.pkl',allow_pickle=True)
+        J_rec = torch.tensor(testdata['J_rec']).to(self.device)
+        J_rec_proj_gt = torch.tensor(testdata['J_rec_proj']).to(self.device)
+        #===============================================
+        # TODO!!! implement your keypoint projection here for testing
+        # J_rec_proj = ??
+        #===============================================
+        if torch.any(J_rec_proj_gt != J_rec_proj):
+            raise ValueError('test fails!')
+        else:
+            print('test passed!')
+            return True
 
 
 
@@ -397,10 +418,9 @@ class LISSTRecOP():
             rec_results[key] = results[idx]
 
         ### save to file
-        timestr = time.strftime("%Y%m%d-%H%M%S")
         outfilename = os.path.join(
                             'results',
-                            'mocap_zju' +timestr
+                            'mocap_zju_a3'
                         )
         if not os.path.exists(outfilename):
             os.makedirs(outfilename)
@@ -415,6 +435,12 @@ class LISSTRecOP():
 
 
 
+
+
+
+
+
+
 if __name__ == '__main__':
     """ example command
     python scripts/app_multiview_mocap_ZJUMocap.py --cfg_shaper=LISST_SHAPER_v2 --cfg_poser=LISST_POSER_v0 --data_path=/mnt/hdd/datasets/ZJUMocapLite/CoreView_313
@@ -422,7 +448,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg_shaper', default=None, required=True)
     parser.add_argument('--cfg_poser', default=None, required=True)
-    parser.add_argument('--data_path', default=None, required=True)
+    parser.add_argument('--data_path', default=None, required=True,
+                        help="specify the datapath")
     parser.add_argument('--gpu_index', type=int, default=0)
     args = parser.parse_args()
 
@@ -454,10 +481,6 @@ if __name__ == '__main__':
     testcfg['weight_sprior'] = 0.0
     testcfg['weight_pprior'] = 0.05
     testcfg['weight_smoothness'] = 100
-    # specify the ratio to enable priors. After ratio*n_iter, the prior is enabled.
-    # This will enable multi-stage optimization automatically
-    testcfg['enable_pprior_ratio'] = 0.25 # after ratio then enabled
-    testcfg['enable_sprior_ratio'] = 0.0 # after ratio then enabled
     
     """model and testop"""
     testop = LISSTRecOP(shapeconfig=modelcfg_shaper, poseconfig=modelcfg_poser, testconfig=testcfg)
