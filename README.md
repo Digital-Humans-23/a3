@@ -55,10 +55,9 @@ mediapipe_all.pkl # the processed file containing the camera parameters and medi
 ```
 
 - Install and setup the LISST model (see below). To verify your installation, please check the `demos` folder. Note that you need to adapt the file paths in this codebase to your own paths.
-- After LISST is successfully installed and setup, you can only focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there.
+- After LISST is successfully installed and setup, you can only focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there. In particular, check **TODO!!!** in this file.
 But you may check other code for comprehensive understanding.
 - Afterwards, you can use `scripts/vis_ZJUMocap.py` to visualize your results, and convert the produced images to a video.
-
 
 ## Ex.1 The loss of body joint projection to images
 
