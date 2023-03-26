@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os, sys, glob
-
 sys.path.append(os.path.join(os.getcwd(), 'lisst'))
 sys.path.append(os.getcwd())
 
