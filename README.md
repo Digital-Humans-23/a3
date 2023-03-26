@@ -27,7 +27,7 @@ The grading scheme is as follows:
 
 
 **IMPORTANT**
-- Without the correct image projection loss, you cannot get valid body motion results, and hence cannot proceed Ex.2 and Ex.3.
+- Without the correct image projection loss, you cannot get valid body motion results, and hence cannot proceed with Ex.2 and Ex.3.
 Therefore, you will get **zero** point for this assignment if you cannot succeed in Ex 1. 
 - Visualization is very important to verify the human motion realism. Therefore, you need to visualize your result based on the code `scripts/vis_ZJUMocap.py` w.r.t. a video, 
 and share the video link above. Without this video, you will get **zero** point from this assignment. 
@@ -41,13 +41,13 @@ and share the video link above. Without this video, you will get **zero** point 
     'J_locs_2d': ...,   # LISST joint locations in indiviual camera views, only available for motion capture results, with shape (t, n_views, J, 2)
 }
 ```
-Please push this file into your own repo for auto-grading. Please don't change its path and format, otherwise the autograding system will not parse your file correctly.
+Please push this file as is into your own repo for auto-grading. Please don't change its path and format, otherwise the autograding system will not parse your file correctly.
 
 
 
 
 ## Setup
-- Download the *Mediapipe Pose* results of the `CoreView_313` sequence [here](https://drive.google.com/drive/folders/1Vfu3vm4_GiZlpGPR2Dwwd56bRxcr1CrD?usp=sharing). 
+- Download the *Mediapipe Pose* results of the `CoreView_313` sequence [here](https://drive.google.com/drive/folders/1Vfu3vm4_GiZlpGPR2Dwwd56bRxcr1CrD?usp=sharing). You can put them under the `data` folder.
 ```
 1_mediapipe # this folder contains the rendered results of mediapipe
 cam_params.json # the original camera parameters and names
@@ -77,7 +77,7 @@ But you may check other code for comprehensive understanding.
 **Details:**
 
 - The img_project_loss can be formulated as $L(Y,X) = \sum_{j, c} v^c_j |y^c_j - \phi(P^cx_j)|$, in which $x$, $y$, $v$, $P$ and $\phi(\cdot)$ are the 3D location, the 2D detected location, the detected visibility (ranging between 0 and 1), and the projection matrix, respectively. $_j$ and $^c$ denote the joint j and the camera c, respectively.
-- Since this loss is important, we provide an unit test for it. Specifically, we provide a file `results/test_img_project_loss_data.pkl`, which contains the input and the correct output. The output from your implementation should let them match. See the function `test_img_project_loss()` for details.
+- Since this loss is important, we provide an unit test for it. Specifically, we provide a file `data/test_img_project_loss_data.pkl`, which contains a random input and its correct output. The output from your implementation should let them match. See the function `test_img_project_loss()` for details. **Note that implementing this test function is NOT mandatory, and will not be counted into the grade.**
 
 
 

@@ -443,7 +443,7 @@ class LISSTRecOP():
 
 if __name__ == '__main__':
     """ example command
-    python scripts/app_multiview_mocap_ZJUMocap.py --cfg_shaper=LISST_SHAPER_v2 --cfg_poser=LISST_POSER_v0 --data_path=/mnt/hdd/datasets/ZJUMocapLite/CoreView_313
+    python scripts/app_multiview_mocap_ZJUMocap.py --cfg_shaper=LISST_SHAPER_v2 --cfg_poser=LISST_POSER_v0 --data_path=data/CoreView_313
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfg_shaper', default=None, required=True)
