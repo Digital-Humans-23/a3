@@ -26,7 +26,7 @@ The grading scheme is as follows:
 - (30%) Ex 3: Implement the temporal smoothness term.
 
 Note: If your code can pass `test1.py`, you will get 70% of the grades. If it passes `test1.py` and `test2.py`, you will get 100% of your grades.
-If it passes `test3.py`, plagiarithm is detected.
+If it fails on `test3.py`, plagiarithm is detected.
 
 
 **IMPORTANT**
