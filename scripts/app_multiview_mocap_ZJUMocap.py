@@ -268,9 +268,9 @@ class LISSTRecOP():
         betas = torch.zeros(1, 12).to(self.device)
         
         r_locs.requires_grad=True 
-        J_rotlatent.requires_grad=True
+        J_rotlatent.requires_grad=False
         transf_rotcont.requires_grad=True
-        betas.requires_grad=True
+        betas.requires_grad=False
         
         optimizer = optim.Adam([r_locs, J_rotlatent, transf_rotcont, betas], lr=lr)
         scheduler = get_scheduler(optimizer, policy='lambda',

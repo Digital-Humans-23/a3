@@ -50,14 +50,9 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--exp', default='CoreView_313', 
                         help='the subject in the original ZJUMocap')
-    parser.add_argument('--folder', default='mocap_zju', 
+    parser.add_argument('--folder', default='mocap_zju_a3', 
                         help='the folder containing the results')
-    parser.add_argument('--mode', default='3d', required=True)
     args = parser.parse_args()
-
-    mode = args.mode
-    if mode not in ['3d', '2d']:
-        raise ValueError('mode should be either `2d` or `3d`')
 
     proj_path = os.getcwd()
     
@@ -67,18 +62,16 @@ if __name__=='__main__':
     data = np.load(res_file_name, allow_pickle=True)
     
     
-    if mode == '2d':
-        idx_view_to_render = 0 # dont change this.
-        renderfolder2d = 'results/{}/{}/2d_{}'.format(folder, exp, idx_view_to_render)
+    idx_view_to_render = 0 # dont change this.
+    renderfolder2d = 'results/{}/{}/2d_{}'.format(folder, exp, idx_view_to_render)
 
-        if not os.path.exists(renderfolder2d):
-            os.makedirs(renderfolder2d)
-        
-        zju_data = 'data/ZJUMocap/{}/'.format(exp)
-        frame_canvas = os.path.join(zju_data, '1_mediapipe/renders')
-        joints_locs_2d = data['J_locs_2d']
-        visualize2d(joints_locs_2d, renderfolder2d,
-                    # 1,
-                    idx_view_to_render, 
-                    frame_canvas)
+    if not os.path.exists(renderfolder2d):
+        os.makedirs(renderfolder2d)
+    
+    frame_canvas = os.path.join('data/1_mediapipe/renders')
+    joints_locs_2d = data['J_locs_2d']
+    visualize2d(joints_locs_2d, renderfolder2d,
+                # 1,
+                idx_view_to_render, 
+                frame_canvas)
 

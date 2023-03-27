@@ -22,8 +22,11 @@ Specifically, we provide a codebase, pre-trained models, and pre-processed data,
 
 The grading scheme is as follows:
 - (50%) Ex 1: Implement the image projection loss, i.e. the data term for motion capture.
-- (30%) Ex 2: Implement the multistage optimization.
-- (20%) Ex 3: Implement the temporal smoothness term.
+- (20%) Ex 2: Implement the multistage optimization.
+- (30%) Ex 3: Implement the temporal smoothness term.
+
+Note: If your code can pass `test1.py`, you will get 70% of the grades. If it passes `test1.py` and `test2.py`, you will get 100% of your grades.
+If it passes `test3.py`, plagiarithm is detected.
 
 
 **IMPORTANT**
@@ -54,9 +57,10 @@ cam_params.json # the original camera parameters and names
 mediapipe_all.pkl # the processed file containing the camera parameters and mediapipe keypoints
 ```
 
-- Install and setup the LISST model (see below). To verify your installation, please check the `demos` folder. Note that you need to adapt the file paths in this codebase to your own paths.
-- After LISST is successfully installed and setup, you can only focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there. In particular, check **TODO!!!** in this file.
-But you may check other code for comprehensive understanding.
+- Install and setup the LISST model (see the appendix below). To verify your installation, please check the `demos` folder. Note that you need to adapt the file paths in this codebase to your own paths. You may encounter 
+- After LISST is successfully installed and setup, you can only focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there. In particular, check **TODO!!!** in this file. But you may check other code for comprehensive understanding.
+- If the program runs successfully, it will automatically generate the file `results/mocap_zju_a3/CoreView_313.pkl`. You can manually add it to the repo by `git add -f results/mocap_zju_a3/CoreView_313.pkl`, and then commit and push.
+
 - Afterwards, you can use `scripts/vis_ZJUMocap.py` to visualize your results, and convert the produced images to a video.
 
 ## Ex.1 The loss of body joint projection to images
@@ -184,7 +188,12 @@ source {path_to_venv}/bin/activate
 pip install -r requirements.txt
 ```
 Note that other versions might also work but not are not tested. 
-In principle, this codebase is not sensitive to the Pytorch version, so please use the version that fits your own CUDA version and the GPU driver.
+In principle, this codebase is not sensitive to the Pytorch version, so please use the version that fits your own CUDA version and the GPU driver. Note that you may encounter errors like 
+```
+ERROR: jupyter-packaging 0.12.3 has requirement setuptools>=60.2.0, but you'll have setuptools 44.0.0 which is incompatible.
+ERROR: ypy-websocket 0.8.4 has requirement y-py<0.7.0,>=0.6.0, but you'll have y-py 0.5.9 which is incompatible.
+```
+Ignore them for now.
 
 
 **Third**, install the `lisst` module into the environmentby running
@@ -192,11 +201,10 @@ In principle, this codebase is not sensitive to the Pytorch version, so please u
 python setup.py install
 ```
 
-
 Before running the demos in `demos/*.ipynb`, datasets and checkpoints should be downloaded beforehand.
 
 
-## For developers
+## For developers (Or ***Digital Human 2023 students***)
 Note that the files in `scripts` are for developers and have special path settings.
 To run them properly, the `lisst` module should NOT be installed. Uninstall lisst can be done by
 ```
