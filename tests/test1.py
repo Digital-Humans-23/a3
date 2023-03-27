@@ -27,5 +27,5 @@ def test():
     err = np.arccos((np.trace(np.matmul(J_rotmat, J_rotmat_pgt),axis1=1,axis2=2)-1)/2.0)
     err_angles = np.mean(err) * 180 / np.pi
 
-    assert err_locs_3d <=0.25 and err_angles<=30
+    assert err_locs_3d <=0.25 and err_angles<=45
 

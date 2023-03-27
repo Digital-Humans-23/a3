@@ -10,8 +10,7 @@ def test():
     data_pgt = np.load('data/CoreView_313_test.pkl', allow_pickle=True)
 
     """load the result"""
-    # data = np.load('results/mocap_zju_a3/CoreView_313.pkl', allow_pickle=True)
-    data = np.load('data/CoreView_313_test.pkl', allow_pickle=True)
+    data = np.load('results/mocap_zju_a3/CoreView_313.pkl', allow_pickle=True)
 
     """compute the metrics"""
     # joint locations

@@ -5,6 +5,7 @@ __pycache__
 *.pkl
 
 data/1_mediapipe/
+results/lisst
 
 build/
 dist/
