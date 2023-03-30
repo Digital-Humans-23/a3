@@ -24,6 +24,9 @@ from lisst.models.body import LISSTPoser, LISSTCore
 
 
 
+
+
+
 class LISSTRecOP():
     """operation to perform motion capture from multi-view cameras in ZJUMocap
         
@@ -149,22 +152,13 @@ class LISSTRecOP():
 
 
 
-    def img_project_loss(self, 
-            obs: torch.Tensor, #[t,b,p,3], the last dimension=[x,y,vis]
-            J_rec: torch.Tensor, #[t,b,p,3], the last dimension denotes the 3D location
-            cam_rotmat: torch.Tensor, #6D camera rotation w.r.t. origin of the first mp
-            cam_transl: torch.Tensor, # cam translation w.r.t. origin of the first mp,
-            cam_K: torch.Tensor, 
-        )->torch.TensorType:
-        ''' reprojection loss to multi-view images
-        Args:
-            - obs: the 2D keypoint detections. [t,b,J,3]. b denotes the camera views. The last dimension = [x,y,vis]
-            - J_rec: the 3D joint locations. [t,b=1,J,3]. b=1 if only one person one sequence.
-            - cam_rotmat: camera rotation matrix from world to cam. [b,3,3]. b denotes the cam views.
-            - cam_transl: camera translation from world to cam. [b,1,3] b denotes the cam views.
-            - cam_K: the cam intrinsics. [b,3,3] 
-        '''
 
+    def img_project(self,
+                    J_rec: torch.Tensor, #[t,b,p,3], the last dimension denotes the 3D location
+                    cam_rotmat: torch.Tensor, #6D camera rotation w.r.t. origin of the first mp
+                    cam_transl: torch.Tensor, # cam translation w.r.t. origin of the first mp,
+                    cam_K: torch.Tensor, 
+        ):
         # =======================================
         ### TODO!!! Ex.1: implement the img_project_loss here
         # This loss contains:
@@ -181,31 +175,51 @@ class LISSTRecOP():
         # - please use our file `results/test_img_project_loss_data.pkl` to test the keypoint detection. 
         # =======================================
         
-        J_rec_proj = None 
+        J_rec_proj = 0
+        return J_rec_proj
+
+
+
+
+    def generate_img_project_test_file(self, cam_rotmat, cam_transl, cam_K):
+        """this function is to test the implementation of `img_project_loss`.
+        """
+        
+        # load data in np
+        testdata = np.load('results/test_img_project_loss_data.pkl',allow_pickle=True)
+        J_rec = torch.tensor(testdata['J_rec']).float().to(self.device)
+        J_rec_proj_gt = torch.tensor(testdata['J_rec_proj']).float().to(self.device)
+        J_rec_proj = self.img_project(J_rec, cam_rotmat, cam_transl, cam_K).detach().cpu().numpy()
+        np.save('data/test_img_project_loss_data2.npy',J_rec_proj)
+        print('test file saved!')
+            
+        
+
+
+    def img_project_loss(self, 
+            obs: torch.Tensor, #[t,b,p,3], the last dimension=[x,y,vis]
+            J_rec: torch.Tensor, #[t,b,p,3], the last dimension denotes the 3D location
+            cam_rotmat: torch.Tensor, #6D camera rotation w.r.t. origin of the first mp
+            cam_transl: torch.Tensor, # cam translation w.r.t. origin of the first mp,
+            cam_K: torch.Tensor, 
+        )->torch.TensorType:
+        ''' reprojection loss to multi-view images
+        Args:
+            - obs: the 2D keypoint detections. [t,b,J,3]. b denotes the camera views. The last dimension = [x,y,vis]
+            - J_rec: the 3D joint locations. [t,b=1,J,3]. b=1 if only one person one sequence.
+            - cam_rotmat: camera rotation matrix from world to cam. [b,3,3]. b denotes the cam views.
+            - cam_transl: camera translation from world to cam. [b,1,3] b denotes the cam views.
+            - cam_K: the cam intrinsics. [b,3,3] 
+        '''
+
+        # project keypoints and save the file for testing.
+        J_rec_proj = self.img_project(J_rec, cam_rotmat, cam_transl, cam_K)
+        self.generate_img_project_test_file(cam_rotmat, cam_transl, cam_K)
+        
         #calculate the loss
         loss = obs[:,:,:,-1:]*(obs[:,:,:,:-1]-J_rec_proj).abs()
         
         return torch.mean(loss)
-
-
-
-
-    def test_img_project_loss(self, cam_rotmat, cam_transl, cam_K):
-        """this function is to test the implementation of `img_project_loss`.
-        """
-        testdata = np.load('results/test_img_project_loss_data.pkl',allow_pickle=True)
-        J_rec = torch.tensor(testdata['J_rec']).to(self.device)
-        J_rec_proj_gt = torch.tensor(testdata['J_rec_proj']).to(self.device)
-        #===============================================
-        # TODO!!! implement your keypoint projection here for testing
-        # J_rec_proj = ??
-        #===============================================
-        if torch.any(J_rec_proj_gt != J_rec_proj):
-            raise ValueError('test fails!')
-        else:
-            print('test passed!')
-            return True
-
 
 
 

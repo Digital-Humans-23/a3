@@ -517,7 +517,6 @@ class CanonicalCoordinateExtractor:
 # SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 
-from transforms3d.euler import euler2mat
 
 class Joint:
   def __init__(self, name, direction, length, axis, dof, limits):
