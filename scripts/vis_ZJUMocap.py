@@ -48,7 +48,7 @@ def visualize2d(joints_locs_2d, outfile_path, idx_view_to_render, frame_canvas, 
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--exp', default='CoreView_313', 
+    parser.add_argument('--exp', default='data', 
                         help='the subject in the original ZJUMocap')
     parser.add_argument('--folder', default='mocap_zju_a3', 
                         help='the folder containing the results')

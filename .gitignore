@@ -5,6 +5,8 @@ __pycache__
 *.pkl
 
 data/1_mediapipe/
+data/cam_params.json
+data/mediapipe_all.pkl
 results/
 
 build/

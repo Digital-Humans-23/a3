@@ -21,12 +21,11 @@ Our human body is complex, so we leverage a pre-trained human body model, i.e. L
 Specifically, we provide a codebase, pre-trained models, and pre-processed data, and you implement the most essential parts.
 
 The grading scheme is as follows:
-- (50%) Ex 1: Implement the image projection loss, i.e. the data term for motion capture.
-- (20%) Ex 2: Implement the multistage optimization.
-- (30%) Ex 3: Implement the temporal smoothness term.
+- (50%) Ex 1: Implement the image projection loss, i.e. the data term for motion capture. (`test01.py`)
+- (20%) Ex 2: Implement the multistage optimization. (`test02.py`)
+- (30%) Ex 3: Implement the temporal smoothness term. (`test03.py`)
 
-Note: If your code can pass `test1.py`, you will get 70% of the grades. If it passes `test1.py` and `test2.py`, you will get 100% of your grades.
-If it fails on `test3.py`, plagiarithm is detected.
+Note: If it fails on `test04.py`, plagiarithm is detected.
 
 
 **IMPORTANT**
@@ -57,9 +56,9 @@ cam_params.json # the original camera parameters and names
 mediapipe_all.pkl # the processed file containing the camera parameters and mediapipe keypoints
 ```
 
-- Install and setup the LISST model (see the appendix below). To verify your installation, please check the `demos` folder. Note that you need to adapt the file paths in this codebase to your own paths. You may encounter 
+- Install and setup the LISST model (see the appendix below). To verify your installation, please check the `demos` folder. Note that you need to adapt the file paths in this codebase to your own paths. 
 - After LISST is successfully installed and setup, you can only focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there. In particular, check **TODO!!!** in this file. But you may check other code for comprehensive understanding.
-- If the program runs successfully, it will automatically generate the file `results/mocap_zju_a3/CoreView_313.pkl`. You can manually add it to the repo by `git add -f results/mocap_zju_a3/CoreView_313.pkl`, and then commit and push.
+- If the program runs successfully, it will automatically generate the file `results/mocap_zju_a3/data.pkl`. You can manually add it to the repo by `git add -f results/mocap_zju_a3/data.pkl`, and then commit and push.
 
 - Afterwards, you can use `scripts/vis_ZJUMocap.py` to visualize your results, and convert the produced images to a video.
 
@@ -71,22 +70,17 @@ mediapipe_all.pkl # the processed file containing the camera parameters and medi
   - `scripts/app_multiview_mocap_ZJUMocap.py`
   
 - Functions:
-  - `img_project_loss(...)`
+  - `img_project(...)`
 
 **Task:**
 
-- Implement most part of this img_project_loss.
+- Implement this function.
 
 
 **Details:**
-
 - The img_project_loss can be formulated as $L(Y,X) = \sum_{j, c} v^c_j |y^c_j - \phi(P^cx_j)|$, in which $x$, $y$, $v$, $P$ and $\phi(\cdot)$ are the 3D location, the 2D detected location, the detected visibility (ranging between 0 and 1), and the projection matrix, respectively. $_j$ and $^c$ denote the joint j and the camera c, respectively.
-- Since this loss is important, we provide an unit test for it. Specifically, we provide a file `data/test_img_project_loss_data.pkl`, which contains a random input and its correct output. The output from your implementation should let them match. See the function `test_img_project_loss()` for details. **Note that implementing this test function is NOT mandatory, and will not be counted into the grade.**
-
-
-
-
-
+- You need `generate_img_project_test_file()` to generate the file to pass `test01`. 
+- To test, you can run `pytest tests/test01.py` locally before committing to the repo. By submitting, you need to add `data/test_img_project_loss_data2.npy` to the repo.
 
 
 ## Ex.2 Multistage optimization
@@ -98,6 +92,7 @@ mediapipe_all.pkl # the processed file containing the camera parameters and medi
   
 - Functions:
   - some missing code blocks in `recover()`.
+  - check `TODO!!! Ex.2`.
 
 **Task:**
 
@@ -109,7 +104,7 @@ mediapipe_all.pkl # the processed file containing the camera parameters and medi
 - In early stages, we only optimize the body global parameters.
 - In late stages, we optimize both the global and the local body parameters.
 - Multistages can be implemented by enabling/disabling updating certain variables.
-
+- After implementation, you should be able to get `results/mocap_zju_a3/data.pkl`. You could use `test02.py` to verify.
 
 
 
@@ -122,7 +117,7 @@ mediapipe_all.pkl # the processed file containing the camera parameters and medi
   - `scripts/app_multiview_mocap_ZJUMocap.py`
   
 - Functions:
-  - check `loss_smoothness` in the function `recover()`.
+  - check `loss_smoothness` or `TODO!!! Ex.3`  in the function `recover()`.
 
 **Task:**
 
@@ -132,13 +127,13 @@ mediapipe_all.pkl # the processed file containing the camera parameters and medi
 **Details:**
 - Human motion is smooth. Without this loss, obvious discontinuities are in the result.
 - The smoothness loss can be formulated as $L = \sum_{j, t} |x^t_j - x^{t-1}_j|$ to penalize the velocity of the 3D joint locations. In addition, temporal smoothness can also be applied to rotations. Think of how they are implemented.
-
+- After implementation, you should be able to get `results/mocap_zju_a3/data.pkl`. You could use `test03.py` to verify.
 
 
 ## Final Note
 
-We will release our offcical code after the deadline of assignment 3. Further announcements will be sent.
-
+- We will release our offcical code after the deadline of assignment 3. Further announcements will be sent.
+- Your result should also pass `test04.py`.
 
 
 
@@ -170,9 +165,9 @@ Beyond the 31 body joints in CMU Mocap, additional bones are incorporated into t
 
 # Notice
 - This version is to provide a framework for Assignment 3 of the course [Digital Humans 2023](https://vlg.inf.ethz.ch/teaching/Digital-Humans.html) at ETH Zurich. 
+- CPU-only version is already tested and works.
 - Code, data, and model will be updated in future versions.
 - [The official tutorial slides are here.](https://docs.google.com/presentation/d/1n9_FWMsHK-Iej1kg661XKpPUYipbXGGwX8pEMvK7uZo/edit?usp=sharing)
-
 
 
 # Installation

@@ -160,22 +160,17 @@ class LISSTRecOP():
                     cam_K: torch.Tensor, 
         ):
         # =======================================
-        ### TODO!!! Ex.1: implement the img_project_loss here
-        # This loss contains:
-        # (1) project the 3D joint locations from the world coordinate to the 2D image plane, 
-        # (2) calculate the loss for penalizing the 2D distances between projected joints and 2D detections.
-        # (3) the visibility produced by the 2D detection is used to weight the loss for the joint.
-        
-        # define reward terms here:
+        ### TODO!!! Ex.1: implement here
         # Hints:
         # - J_rec is the 3D joint locations in the world coordinate system. 
         # - Based on the camera extrinsics, convert J_rec to J_rec_cam, which has the joint locations in individual camera coordinate systems.
         # - Based on the camera intrinsics, convert J_rec_cam to J_rec_proj, which has the 2D joint locations in the image planes. 
         # - if encountering tensor shape misalignment, you could print these tensor shapes for debugging.
-        # - please use our file `results/test_img_project_loss_data.pkl` to test the keypoint detection. 
+        # - please use our file `data/test_img_project_loss_data.pkl` to test the keypoint detection. 
+        J_rec_proj = None
         # =======================================
+       
         
-        J_rec_proj = 0
         return J_rec_proj
 
 
@@ -186,12 +181,12 @@ class LISSTRecOP():
         """
         
         # load data in np
-        testdata = np.load('results/test_img_project_loss_data.pkl',allow_pickle=True)
+        testdata = np.load('data/test_img_project_loss_data.pkl',allow_pickle=True)
         J_rec = torch.tensor(testdata['J_rec']).float().to(self.device)
         J_rec_proj_gt = torch.tensor(testdata['J_rec_proj']).float().to(self.device)
         J_rec_proj = self.img_project(J_rec, cam_rotmat, cam_transl, cam_K).detach().cpu().numpy()
         np.save('data/test_img_project_loss_data2.npy',J_rec_proj)
-        print('test file saved!')
+        # print('test file saved!')
             
         
 
@@ -288,7 +283,7 @@ class LISSTRecOP():
         
         optimizer = optim.Adam([r_locs, J_rotlatent, transf_rotcont, betas], lr=lr)
         scheduler = get_scheduler(optimizer, policy='lambda',
-                                    num_epochs_fix=self.testconfig['enable_pprior_ratio']*n_iter,
+                                    num_epochs_fix=0.25*n_iter,
                                     num_epochs=n_iter)
 
         #--------optimization main loop. 
@@ -321,9 +316,8 @@ class LISSTRecOP():
             # Hints:
             # - minimize the l1/l2 norm of the joint location velocity
             # - minimize the l1/l2 norm of the joint rotation velocity
-            loss_smoothness = 0
+            loss_smoothness = torch.zeros(1).float().to(self.device)
             # =======================================
-            
             
             #shape regularization, encouraging to produce mean shape.
             loss_sprior = self.weight_sprior * torch.mean(betas**2)
@@ -358,13 +352,14 @@ class LISSTRecOP():
                                     transf_rotcont=transf_rotcont, transf_transl=None)
 
         #reproject to 2D
-        J_rec_cam = torch.einsum('bij,tbpj->tbpi', cam_rotmat, J_rec_fk) + cam_transl.unsqueeze(0)
+        J_locs_2d = self.img_project(J_rec_fk, cam_rotmat, cam_transl, cam_K)
+        # J_rec_cam = torch.einsum('bij,tbpj->tbpi', cam_rotmat, J_rec_fk) + cam_transl.unsqueeze(0)
         
-        #project the 3D joints to the image plane
-        J_rec_proj_unorm = torch.einsum('bij, tbpj->tbpi', cam_K, J_rec_cam)
-        J_rec_proj_x = J_rec_proj_unorm[:,:,:,0]/J_rec_proj_unorm[:,:,:,2]
-        J_rec_proj_y = J_rec_proj_unorm[:,:,:,1]/J_rec_proj_unorm[:,:,:,2]
-        J_locs_2d = torch.stack([J_rec_proj_x, J_rec_proj_y],dim=-1)
+        # #project the 3D joints to the image plane
+        # J_rec_proj_unorm = torch.einsum('bij, tbpj->tbpi', cam_K, J_rec_cam)
+        # J_rec_proj_x = J_rec_proj_unorm[:,:,:,0]/J_rec_proj_unorm[:,:,:,2]
+        # J_rec_proj_y = J_rec_proj_unorm[:,:,:,1]/J_rec_proj_unorm[:,:,:,2]
+        # J_locs_2d = torch.stack([J_rec_proj_x, J_rec_proj_y],dim=-1)
 
         #change body features to body parameters
         r_locs = J_rec_fk[:,:,:1] # the generated root translation

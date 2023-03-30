@@ -8,12 +8,13 @@ ipython
 jupyter
 
 
---extra-index-url https://download.pytorch.org/whl/cu113
-torch==1.12.1+cu113 
-torchvision==0.13.1+cu113 
-torchaudio==0.12.1 
-torchgeometry==0.1.2
+# --extra-index-url https://download.pytorch.org/whl/cu113
+# torch==1.12.1+cu113 
+# torchvision==0.13.1+cu113 
+# torchaudio==0.12.1 
+# torchgeometry==0.1.2
+torch==1.12.1
+torchgeometry
 tensorboardX
-transforms3d
 pyntcloud
 mediapy
