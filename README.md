@@ -1,7 +1,7 @@
 # Assignment 3 - Data-driven inverse kinematics for human motion capture
 
 
-Hand-in: 11 April 2023, 14:00 CET
+Hand-in: 20 April 2023, 14:00 CET
 
 
 ----
@@ -55,8 +55,15 @@ data/cam_params.json # the original camera parameters and names
 data/mediapipe_all.pkl # the processed file containing the camera parameters and mediapipe keypoints
 ```
 
-- Install and setup the LISST model (see the appendix below). To verify your installation, please check the `demos` folder. Note that you may need to adapt the file paths in this codebase to your own paths. 
-- After LISST is successfully installed and setup, you can only focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there. In particular, check **TODO!!!** in this file. But you may check other code for comprehensive understanding.
+- Download our pre-trained checkpoints [here](https://drive.google.com/drive/folders/1jcMbJgZtZEHqy-R8e1hjiTkR6V41aX08?usp=sharing). These checkpoints correspond to the model config files.
+Please put all the downloaded files to the folder `results/lisst/`.
+
+
+- Install and setup the LISST model (see the appendix below). To verify your installation, we provide 2 tutorials in `demos/*.ipynb`. This requires you to run `pip install lisst` first. Note that you may need to adapt the file paths and device in this codebase to your own paths. 
+  - ***These tutorial scripts are only for self-exploration. You don't have to run them successfully to pass this assignment.***
+  - ***To avoid version confliction, please run `pip uninstall lisst` after you finish these two tutorials***.
+
+- If previous steps are successful, you can ***ONLY*** focus on `scripts/app_multiview_mocap_ZJUMocap.py`, because all the implementation tasks are there. In particular, check **TODO!!!** in this file. But you may check other code for comprehensive understanding.
 - If the program runs successfully, it will automatically generate the file `results/mocap_zju_a3/data.pkl`. You can manually add it to the repo by `git add -f results/mocap_zju_a3/data.pkl`, and then commit and push.
 
 - Afterwards, you can use `scripts/vis_ZJUMocap.py` to visualize your results, and convert the produced images to a video.
@@ -164,7 +171,7 @@ Beyond the 31 body joints in CMU Mocap, additional bones are incorporated into t
 
 # Notice
 - This version is to provide a framework for Assignment 3 of the course [Digital Humans 2023](https://vlg.inf.ethz.ch/teaching/Digital-Humans.html) at ETH Zurich. 
-- CPU-only version is already tested and works.
+- CPU-only version is already tested and works for the tasks of A3.
 - Code, data, and model will be updated in future versions.
 - [The official tutorial slides are here.](https://docs.google.com/presentation/d/1n9_FWMsHK-Iej1kg661XKpPUYipbXGGwX8pEMvK7uZo/edit?usp=sharing)
 
@@ -190,81 +197,6 @@ ERROR: ypy-websocket 0.8.4 has requirement y-py<0.7.0,>=0.6.0, but you'll have y
 Ignore them for now.
 
 
-**Third**, install the `lisst` module into the environmentby running
-```
-python setup.py install
-```
-
-Before running the demos in `demos/*.ipynb`, datasets and checkpoints should be downloaded beforehand.
-
-
-## For developers (Or ***Digital Human 2023 students***)
-Note that the files in `scripts` are for developers and have special path settings.
-To run them properly, the `lisst` module should NOT be installed. Uninstall lisst can be done by
-```
-pip uninstall lisst
-```
-
-
-
-# Data and Models
-
-## Data
-### Processed CMU Mocap
-Our work is developed based on the [CMU Mocap](http://mocap.cs.cmu.edu/) dataset.
-We parse the raw `.asf` and `.amc` files, and re-organize them into the **canonicalized** format, which is defined in 
-[MOJO](https://yz-cnsdqz.github.io/eigenmotion/MOJO/index.html) and [GAMMA](https://yz-cnsdqz.github.io/eigenmotion/GAMMA/index.html).
-One can read `third_party/ACMParser` for detailed implementations. 
-Our processed data can be downloaded [here](https://drive.google.com/drive/folders/14I_ufLfGlyldGeC3WrfBEMOiyP40l9wI?usp=sharing), which was used for training and testing our models.
-```
-CMU-canon-MPx8.pkl # all processed CMU sequences
-CMU-canon-MPx8-train.pkl # all processed CMU sequences for training models
-CMU-canon-MPx8-test.pkl # all processed CMU sequences for testing models or providing motion seeds
-```
-***Note that these pre-processed data may change with release versions.***
-
-
-
-### ZJUMocap
-We use [ZJUMocap-LightStage](https://chingswy.github.io/Dataset-Demo/) for the demo of markerless motion capture. Please download the this dataset first.
-We also provide the *Mediapipe Pose* results of the `CoreView_313` sequence [here](https://drive.google.com/drive/folders/1Vfu3vm4_GiZlpGPR2Dwwd56bRxcr1CrD?usp=sharing). 
-```
-1_mediapipe # this folder contains the rendered results of mediapipe
-cam_params.json # the original camera parameters and names
-mediapipe_all.pkl # the processed file containing the camera parameters and mediapipe keypoints
-```
-
-
-## Models ***necessary for DigitalHuman2023 students!***
-Our pre-trained checkpoints can be downloaded [here](https://drive.google.com/drive/folders/1jcMbJgZtZEHqy-R8e1hjiTkR6V41aX08?usp=sharing). These checkpoints correspond to the model config files.
-Please put all the downloaded files to the folder `results/lisst/`.
-
-
-
-
-# Tutorials
-We provide 2 tutorials in `demos/*.ipynb` to guide users how to use our LISST model. 
-Please check these files for details.
-
-# Citations
-Please consider to cite the following works
-```
-@inproceedings{zhang2021we,
-  title={We are more than our joints: Predicting how 3d bodies move},
-  author={Zhang, Yan and Black, Michael J and Tang, Siyu},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={3372--3382},
-  year={2021}
-}
-
-@inproceedings{zhang2022wanderings,
-  title={The wanderings of odysseus in 3D scenes},
-  author={Zhang, Yan and Tang, Siyu},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={20481--20491},
-  year={2022}
-}
-```
 
 
 
