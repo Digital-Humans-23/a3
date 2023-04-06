@@ -355,11 +355,6 @@ class LISSTRecOP():
         J_locs_2d = self.img_project(J_rec_fk, cam_rotmat, cam_transl, cam_K)
         # J_rec_cam = torch.einsum('bij,tbpj->tbpi', cam_rotmat, J_rec_fk) + cam_transl.unsqueeze(0)
         
-        # #project the 3D joints to the image plane
-        # J_rec_proj_unorm = torch.einsum('bij, tbpj->tbpi', cam_K, J_rec_cam)
-        # J_rec_proj_x = J_rec_proj_unorm[:,:,:,0]/J_rec_proj_unorm[:,:,:,2]
-        # J_rec_proj_y = J_rec_proj_unorm[:,:,:,1]/J_rec_proj_unorm[:,:,:,2]
-        # J_locs_2d = torch.stack([J_rec_proj_x, J_rec_proj_y],dim=-1)
 
         #change body features to body parameters
         r_locs = J_rec_fk[:,:,:1] # the generated root translation
