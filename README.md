@@ -59,7 +59,7 @@ data/mediapipe_all.pkl # the processed file containing the camera parameters and
 Please put all the downloaded files to the folder `results/lisst/`.
 
 
-- Install and setup the LISST model (see the appendix below). To verify your installation, we provide 2 tutorials in `demos/*.ipynb`. This requires you to run `pip install lisst` first. Note that you may need to adapt the file paths and device in this codebase to your own paths. 
+- Install and setup the LISST model (see the appendix below). To verify your installation, we provide 2 tutorials in `demos/*.ipynb`. This requires you to run `python setup.py install` first. Note that you may need to adapt the file paths and device in this codebase to your own paths. 
   - ***These tutorial scripts are only for self-exploration. You don't have to run them successfully to pass this assignment.***
   - ***To avoid version confliction, please run `pip uninstall lisst` after you finish these two tutorials***.
 
